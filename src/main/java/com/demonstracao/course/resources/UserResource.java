@@ -14,7 +14,6 @@ public class UserResource {
 	@GetMapping              		// método que responde a requisições GET
 	// Implementar os métodos para acessar o recurso (CRUD - Create, Read, Update, Delete)
 	public ResponseEntity<User> findAll() {
-		// Simular um usuário para teste
 		// User u = new User(Long.valueOf(1), "name", "email", "phone", "password");
 		User u = new User(1L, "Maria", "mariasilva@gmail.com", "99998888", "123456");
 

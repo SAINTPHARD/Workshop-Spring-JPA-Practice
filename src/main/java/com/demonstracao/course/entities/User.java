@@ -2,17 +2,27 @@ package com.demonstracao.course.entities;
 
 import java.util.Objects;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity						// Anotação para definir que a classe é uma entidade JPA (Java Persistence API)
+@Table(name = "tb_user")	// Nome da tabela no banco de dados
 public class User implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
-	// Implementar os atributos basicos
+	// 1. Implementar os atributos basicos
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // Anotação para definir que o id é gerado automaticamente pelo banco de dados
 	private Long id;
 	private String name;
 	private String email;
 	private String phone;
 	private String password;
 	
-	// Implementar os construtores (vazio porque é framework e com todos os atributos)
+	// 2. Implementar os construtores (vazio porque é framework e com todos os atributos)
 	public User() {
 	}
 	
@@ -25,7 +35,7 @@ public class User implements java.io.Serializable {
 		this.password = password;
 	}
 
-	// Implementar os getters e setters
+	// 3. Implementar os getters e setters
 	public Long getId() {
 		return id;
 	}
@@ -66,7 +76,7 @@ public class User implements java.io.Serializable {
 		this.password = password;
 	}
 
-	// Implementar os metodos hashCode e equals (somente o id)
+	// 4. Implementar os metodos hashCode e equals (somente o id)
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
