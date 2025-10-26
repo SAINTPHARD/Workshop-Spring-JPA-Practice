@@ -26,7 +26,7 @@ public class User implements java.io.Serializable {
 	private String phone;
 	private String password;
 	
-	@JsonIgnore // <-- APRIMORAMENTO CRÍTICO ADICIONADO
+	@JsonIgnore // <-- ANOTAÇÃO ADICIONADA PARA EVITAR LOOP INFINITO
 	@OneToMany(mappedBy = "client")
 	private List<Order> orders = new ArrayList<>();
 	
