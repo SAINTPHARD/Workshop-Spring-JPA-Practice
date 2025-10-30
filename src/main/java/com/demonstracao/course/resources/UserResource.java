@@ -12,27 +12,25 @@ import org.springframework.web.bind.annotation.RestController;
 import com.demonstracao.course.entities.User;
 import com.demonstracao.course.services.UserService;
 
-@RestController            			
-@RequestMapping(value = "/users") 
+@RestController
+@RequestMapping(value = "/users")
 public class UserResource {
 
-	@Autowired 			  					
+	@Autowired
 	private UserService service;
-	
-	@GetMapping              		
+
+	@GetMapping
 	public ResponseEntity<List<User>> findAll() {
-		List<User> list = service.findAll(); 
+		List<User> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
-	
+
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<User> findById(@PathVariable Long id) {
-		User u = service.findById(id); 
+		User u = service.findById(id);
 		return ResponseEntity.ok().body(u);
 	}
 }
-
-
 
 // @RestController // Anotação para definir que a classe é um recurso REST
 // @RequestMapping(value = "/users") // Definir o caminho do recurso (value é o endpoint e "/users" é o caminho)
@@ -53,11 +51,11 @@ public class UserResource {
 
 // public responseEntity<List<User>> findAll() { // método que responde a requisições GET
 /**
-// User u = new User(Long.valueOf(1), "name", "email", "phone", "password");
-// User u = new User(1L, "Maria", "mariasilva@gmail.com", "99998888", "123456");
-// Apagar a instanciação acima quando for implementar o serviço manualmente
- 	*return ResponseEntity.ok().body(u);
-*/
+ * // User u = new User(Long.valueOf(1), "name", "email", "phone", "password");
+ * // User u = new User(1L, "Maria", "mariasilva@gmail.com", "99998888",
+ * "123456"); // Apagar a instanciação acima quando for implementar o serviço
+ * manualmente return ResponseEntity.ok().body(u);
+ */
 
 // IMPLEMENTAÇÃO DO MÉTODO findById
 //	@GetMapping(value = "/{id}") // Definir o endpoint para buscar um usuário por id
@@ -69,4 +67,3 @@ public class UserResource {
 
 // List<User> list = service.findAll(); // Chamar o serviço para buscar todos os usuários
 // return ResponseEntity.ok().body(list); // Retornar a resposta HTTP com a lista de usuários no corpo
-

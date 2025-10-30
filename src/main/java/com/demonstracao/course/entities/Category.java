@@ -1,13 +1,16 @@
 package com.demonstracao.course.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity 
 @Table(name = "tb_category")
@@ -20,6 +23,9 @@ public class Category implements Serializable {
 	// 1. Crie os atributos
 	private Long id;
 	private String name;
+	
+	@Transient // temporariamente ignora este campo na serialização para evitar problemas de referência circular
+	private Set<Product> products = new HashSet<>();
 	
 	
 	// 2. Crie os construtores(sem args)
