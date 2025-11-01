@@ -24,7 +24,8 @@ import com.demonstracao.course.repositories.UserRepository;
  * quando o perfil 'test' estiver ativo.
  */
 @Configuration
-//@Profile("test")
+@Profile({"test", "docker"}) // ativa tanto no perfil test quanto docker
+
 public class TestConfig implements CommandLineRunner {
 
     @Autowired
@@ -43,20 +44,24 @@ public class TestConfig implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // 1. ======CRIAR CATEGORIAS ======
-        Category c1 = new Category(null, "Electronics");
-        Category c2 = new Category(null, "Books");
-        Category c3 = new Category(null, "Computers");
-        Category c4 = new Category(null, "Clothing");
-        Category c5 = new Category(null, "Sports");
-        Category c6 = new Category(null, "Home");
-        Category c7 = new Category(null, "Toys");
-        Category c8 = new Category(null, "Beauty");
-        Category c9 = new Category(null, "Automotive");
-        Category c10 = new Category(null, "Garden");
+    	// ====== DEPARTAMENTOS ======
+    	Category departamentoTI = new Category(null, "Tecnologia da Informação");
+    	Category departamentoRH = new Category(null, "Recursos Humanos");
+    	Category departamentoFinanceiro = new Category(null, "Financeiro");
+    	Category departamentoComercial = new Category(null, "Comercial e Vendas");
+    	Category departamentoMarketing = new Category(null, "Marketing e Comunicação");
+    	Category departamentoProducao = new Category(null, "Produção e Operações");
+    	Category departamentoJuridico = new Category(null, "Jurídico");
+    	Category departamentoLogistica = new Category(null, "Logística e Suprimentos");
+    	Category departamentoAdministrativo = new Category(null, "Administrativo");
+    	Category departamentoPesquisa = new Category(null, "Pesquisa e Desenvolvimento");
 
-        categoryRepository.saveAll(List.of(
-                c1, c2, c3, c4, c5, c6, c7, c8, c9, c10
-        ));
+    	categoryRepository.saveAll(List.of(
+    	    departamentoTI, departamentoRH, departamentoFinanceiro, departamentoComercial,
+    	    departamentoMarketing, departamentoProducao, departamentoJuridico,
+    	    departamentoLogistica, departamentoAdministrativo, departamentoPesquisa
+    	));
+
 
         // 2. ====== PRODUTOS ======
         Product p1 = new Product(null, "The Lord of the Rings", 90.5, "", "Lorem ipsum dolor sit amet, consectetur.");
@@ -66,7 +71,19 @@ public class TestConfig implements CommandLineRunner {
         Product p5 = new Product(null, "Rails for Dummies", 100.99, "", "Cras fringilla convallis sem vel faucibus.");
         Product p6 = new Product(null, "Electric Guitar", 750.0, "", "Cras fringilla convallis sem vel faucibus.");
 
+        // Salvar os produtos no banco de dados
         productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5, p6));
+        
+        // 3. ====== ASSOCIAR PRODUTOS ÀS CATEGORIAS ======
+        p1.getCategories().add(departamentoRH);              // Planilha de funcionários
+        p2.getCategories().add(departamentoTI);              // Sistema interno
+        p3.getCategories().add(departamentoFinanceiro);      // Relatório contábil
+        p4.getCategories().add(departamentoComercial);       // Painel de vendas
+        p5.getCategories().add(departamentoMarketing);       // Material de divulgação
+        p6.getCategories().add(departamentoProducao);        // Ferramenta de controle de produção
+
+        productRepository.saveAll(List.of(p1, p2, p3, p4, p5, p6));
+
 
         // ====== USUÁRIOS ======
         User u1 = new User(null, "John Doe", "john@gmail.com", "988888888", "123456");
@@ -74,6 +91,7 @@ public class TestConfig implements CommandLineRunner {
         User u3 = new User(null, "Bob Brown", "bob@gmail.com", "966666666", "123456");
         User u4 = new User(null, "Robedson Saintphard", "robedson@gmail.com", "955555555", "123456");
 
+        // Salvar os usuários no banco de dados
         userRepository.saveAll(List.of(u1, u2, u3, u4));
 
         /*
@@ -82,6 +100,7 @@ public class TestConfig implements CommandLineRunner {
         Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), OrderStatus.WAITING_PAYMENT, u2);
         Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.WAITING_PAYMENT, u1);
         Order o4 = new Order(null, Instant.parse("2019-08-23T10:15:30Z"), OrderStatus.DELIVERED, u3);
+        // Salvar os pedidos no banco de dados
         orderRepository.saveAll(List.of(o1, o2, o3, o4));
         */
     }
@@ -117,15 +136,11 @@ public class TestConfig implements CommandLineRunner {
  * ----- Notas sobre código Aplicadas -----
  *
  * 1. Injeção do 'OrderRepository':
- * - O código estava tentando usar 'orderRepository.saveAll(...)' sem
- * ter injetado essa dependência.
  * - Foi necessário adicionar 'import com.demonstracao.course.repositories.OrderRepository;'
  * e a injeção '@Autowired private OrderRepository orderRepository;'
  * no topo da classe.
  *
  * 2. (ATUALIZAÇÃO) Status do Pedido (String para Enum):
- * - O código foi atualizado para usar o Enum 'OrderStatus'
- * em vez de Strings "soltas" (como "PAID").
  * - Foi necessário adicionar a importação
  * 'com.demonstracao.course.entities.enums.OrderStatus'.
  * - As instanciações dos pedidos foram alteradas de
