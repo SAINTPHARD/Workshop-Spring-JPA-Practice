@@ -15,7 +15,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany; 
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 
@@ -47,6 +48,14 @@ public class Order implements Serializable {
 	@OneToMany(mappedBy = "id.order") 
 	private Set<OrderItem> items = new HashSet<>(); // Associação com OrderItem (1 para muitos)
 	
+	// ========================================================================
+	//  🟢 INÍCIO DA IMPLEMENTAÇÃO (Order <-> Payment)
+	// ========================================================================
+	
+	// 6º CAMPO (Associação com Payment - 1 para 1)
+	@OneToOne(mappedBy = "order", cascade = jakarta.persistence.CascadeType.ALL)
+	private Payment payment; 
+	
 	public Order() {
 	}
 	
@@ -59,6 +68,7 @@ public class Order implements Serializable {
 	}
 
 	// ... (getters e setters de id, moment, client) ...
+	// Getter e Setter para Id
 	public Long getId() {
 		return id;
 	}
@@ -67,6 +77,7 @@ public class Order implements Serializable {
 		this.id = id;
 	}
 
+	// Getter e Setter para Moment
 	public Instant getMoment() {
 		return moment;
 	}
@@ -94,6 +105,7 @@ public class Order implements Serializable {
 		}
 	}
 
+	// Getter e Setter para Client
 	public User getClient() {
 		return client;
 	}
@@ -101,6 +113,15 @@ public class Order implements Serializable {
 	public void setClient(User client) {
 		this.client = client;
 	}
+	
+	// Getter e Setter para Payment
+	public Payment getPayment() {
+		return payment;
+	}
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
+	
 	
 	// Getter para os Itens do Pedido
 	public Set<OrderItem> getItems() {
@@ -181,7 +202,26 @@ public class Order implements Serializable {
  * que não haverá problemas de fuso horário.
  *
  * 2. 'status' (Status do pedido): - Está como 'String', o que funciona. -
- * RECOMENDAÇÃO FUTURA: Mais tarde, você provavelmente vai querer mudar isso
- * para um Enum (Ex: OrderStatus.PENDING, OrderStatus.PAID) para evitar erros de
- * digitação (ex: "PAID" vs "paid").
+ * 
+ */
+/*
+ * =====================================================================
+ * 🟢 INÍCIO DA ASSOCIAÇÃO (Order -> Payment)
+ * =====================================================================
+ *
+ * 💡 @OneToOne: Define a relação de Um-para-Um.
+ *
+ * 💡 mappedBy = "order": Diz ao JPA que esta é a ponta "inversa" da relação.
+ * A relação já foi "mapeada por" (controlada) pelo campo 'order'
+ * lá na classe Payment.
+ *
+ * 💡 cascade = CascadeType.ALL:
+ * Isso é MUITO importante. Diz ao JPA: "Se eu salvar um Order,
+ * salve o Payment junto. Se eu deletar um Order, delete o Payment junto."
+ * O ciclo de vida do Payment depende 100% do Order.
+ * 
+ * =================================================================
+ * @OneToOne(mappedBy = "order", cascade = jakarta.persistence.CascadeType.ALL)
+ * OnToOne é uma anotação JPA que define um relacionamento de um-para-um entre duas entidades.
+ * cascade = CascadeType.ALL indica que todas as operações (persistência, remoção, atualização, etc.) realizadas na entidade "Order" devem ser propagadas para a entidade "Payment" associada.
  */
