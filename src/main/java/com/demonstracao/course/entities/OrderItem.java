@@ -49,6 +49,7 @@ public class OrderItem {
 	}
 	// ==================================================
 	// Getter para Product
+	@JsonIgnore
 	public Product getProduct() {
 		return id.getProduct();
 	}

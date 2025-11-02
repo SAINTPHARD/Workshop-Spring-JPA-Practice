@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -30,13 +33,17 @@ public class Product implements Serializable {
 	private String imgUrl;
 	private String description;
 	
-	@ManyToMany // Mapeamento Muitos para Muitos
-	@JoinTable(name = "tb_product_category",  // Nome da tabela de junção
+	@ManyToMany 								// Mapeamento Muitos para Muitos
+	@JoinTable(name = "tb_product_category",    // Nome da tabela de junção
 		joinColumns = @JoinColumn(name = "product_id"), // Chave estrangeira para Product
 		inverseJoinColumns = @JoinColumn(name = "category_id")) // Chave estrangeira para Category
+	private Set<Category> categories = new HashSet<>(); 		// Conjunto de categorias associadas ao produto
 	
-	// Associação com Category (Muitos para Muitos) com Set para evitar duplicatas
-	private Set<Category> categories = new HashSet<>();
+	// =================================================================
+	// 🟢 INÍCIO DA IMPLEMENTAÇÃO (Product <-> OrderItem)
+	// =================================================================
+	@OneToMany(mappedBy = "id.product")	
+	private Set<OrderItem> items = new HashSet<>();
 	
 	// Construtor sem args
 	public Product() {
@@ -95,6 +102,19 @@ public class Product implements Serializable {
 	public Set<Category> getCategories() {
 		return categories;
 	}
+	
+	// =================================================================
+	// 🟢 GETTERS PERSONALIZADOS
+	// =================================================================
+	// Retorna os pedidos associados ao produto
+	@JsonIgnore
+	public Set<Order> getOrders() {
+		Set<Order> set = new HashSet<>();
+		for (OrderItem x : items) {
+			set.add(x.getOrder());
+		}
+		return set;
+	}
 
 	// hashCode e equals baseados em id
 	@Override
@@ -115,3 +135,11 @@ public class Product implements Serializable {
 	}
 
 }
+
+// =================================================================
+//@OneToMany(mappedBy = "id.product") 			// Mapeamento 1 para muitos com OrderItem
+//private Set<OrderItem> items = new HashSet<>(); // Conjunto de OrderItems associados ao produto
+// =================================================================
+
+// construtor padrão (obrigatório para JPA)
+// public Product() {}
