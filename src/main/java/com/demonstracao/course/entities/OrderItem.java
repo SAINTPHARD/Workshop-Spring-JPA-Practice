@@ -3,6 +3,7 @@ package com.demonstracao.course.entities;
 import java.util.Objects;
 
 import com.demonstracao.course.entities.PK.OrderItemPK;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -15,7 +16,8 @@ public class OrderItem {
 
 	// private OrderItemPK id = new OrderItemPK();
 	@EmbeddedId // indica que é uma chave composta
-	private OrderItemPK id;
+	private OrderItemPK id = new OrderItemPK();
+	
 	private Integer quantity;
 	private Double price;
 	
@@ -28,15 +30,16 @@ public class OrderItem {
 	// insere order e product na chave composta e instancia os atributos
 	public OrderItem(Order order, Product product, Integer quantity, Double price) {
 		super();
+		this.id = new OrderItemPK();
 		id.setOrder(order); // insere order na chave composta
 		id.setProduct(product); // insere product na chave composta
 		this.quantity = quantity;
 		this.price = price;
 	}
 
-	// Getters and Setters para quantidade e preço
-	
+	// Getters and Setters 
 	// Getter para Order
+	@JsonIgnore // para evitar referência cíclica na serialização JSON
 	public Order getOrder() {
 		return id.getOrder();
 	}

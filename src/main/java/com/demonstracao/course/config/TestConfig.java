@@ -1,6 +1,6 @@
 package com.demonstracao.course.config;
 
-import java.time.Instant;
+import java.time.Instant; // <-- AJUSTE: Import necessário para Order
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,11 +10,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.demonstracao.course.entities.Category;
-import com.demonstracao.course.entities.Order;
+import com.demonstracao.course.entities.Order; // <-- AJUSTE: Import necessário
+import com.demonstracao.course.entities.OrderItem;
 import com.demonstracao.course.entities.Product;
 import com.demonstracao.course.entities.User;
-import com.demonstracao.course.entities.enums.OrderStatus;
+import com.demonstracao.course.entities.enums.OrderStatus; // <-- AJUSTE: Import necessário
 import com.demonstracao.course.repositories.CategoryRepository;
+import com.demonstracao.course.repositories.OrderItemRepository; // <-- AJUSTE: Importado o repositório correto
 import com.demonstracao.course.repositories.OrderRepository;
 import com.demonstracao.course.repositories.ProductRepository;
 import com.demonstracao.course.repositories.UserRepository;
@@ -25,11 +27,10 @@ import com.demonstracao.course.repositories.UserRepository;
  */
 @Configuration
 @Profile({"test", "docker"}) // ativa tanto no perfil test quanto docker
-
 public class TestConfig implements CommandLineRunner {
 
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired // Injetar a dependência do UserRepository
+    private UserRepository userRepository; // Repositório para a entidade User
 
     @Autowired
     private OrderRepository orderRepository;
@@ -39,6 +40,9 @@ public class TestConfig implements CommandLineRunner {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository; 
 
     @Override
     public void run(String... args) throws Exception {
@@ -75,18 +79,19 @@ public class TestConfig implements CommandLineRunner {
         productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5, p6));
         
         // 3. ====== ASSOCIAR PRODUTOS ÀS CATEGORIAS ======
-        p1.getCategories().add(departamentoRH);              // Planilha de funcionários
-        p2.getCategories().add(departamentoTI);              // Sistema interno
-        p3.getCategories().add(departamentoFinanceiro);      // Relatório contábil
-        p4.getCategories().add(departamentoComercial);       // Painel de vendas
-        p5.getCategories().add(departamentoMarketing);       // Material de divulgação
-        p6.getCategories().add(departamentoProducao);        // Ferramenta de controle de produção
+        p1.getCategories().add(departamentoRH);
+        p2.getCategories().add(departamentoTI);
+        p3.getCategories().add(departamentoFinanceiro);
+        p4.getCategories().add(departamentoComercial);
+        p5.getCategories().add(departamentoMarketing);
+        p6.getCategories().add(departamentoProducao);
 
+        // Salva as associações
         productRepository.saveAll(List.of(p1, p2, p3, p4, p5, p6));
 
 
         // ====== USUÁRIOS ======
-        User u1 = new User(null, "John Doe", "john@gmail.com", "988888888", "123456");
+        User u1 = new User(null, "John Doe", "john@gmail.com", "9888888s888", "123456");
         User u2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", "123456");
         User u3 = new User(null, "Bob Brown", "bob@gmail.com", "966666666", "123456");
         User u4 = new User(null, "Robedson Saintphard", "robedson@gmail.com", "955555555", "123456");
@@ -94,18 +99,33 @@ public class TestConfig implements CommandLineRunner {
         // Salvar os usuários no banco de dados
         userRepository.saveAll(List.of(u1, u2, u3, u4));
 
-        /*
+        
         // ====== PEDIDOS ======
         Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, u1);
         Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), OrderStatus.WAITING_PAYMENT, u2);
         Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.WAITING_PAYMENT, u1);
         Order o4 = new Order(null, Instant.parse("2019-08-23T10:15:30Z"), OrderStatus.DELIVERED, u3);
+        
         // Salvar os pedidos no banco de dados
         orderRepository.saveAll(List.of(o1, o2, o3, o4));
-        */
+        
+        
+        // 4. ======CRIAR ITENS DO PEDIDO (CLasse OrderItem) ======
+        // Associei os itens aos pedidos o1, o2 e o3.
+        OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
+        OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice());
+        OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice());
+        OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
+        OrderItem oi5 = new OrderItem(o4, p2, 1, p2.getPrice());
+        OrderItem oi6 = new OrderItem(o4, p4, 1, p4.getPrice());
+        OrderItem oi7 = new OrderItem(o4, p6, 1, p6.getPrice());
+        
+        // Salvar os itens do pedido no banco de dados
+        orderItemRepository.saveAll(List.of(oi1, oi2, oi3, oi4, oi5, oi6, oi7));
+        
+        // orderRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
     }
 }
-
 
 // ========================================================================
 // 

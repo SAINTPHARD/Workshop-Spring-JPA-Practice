@@ -2,7 +2,9 @@ package com.demonstracao.course.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.demonstracao.course.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -13,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany; 
 import jakarta.persistence.Table;
 
 
@@ -40,6 +43,10 @@ public class Order implements Serializable {
 	@JoinColumn(name = "client_id")
 	private User client;
 	
+	// 5º CAMPO (Associação com os itens do pedido)
+	@OneToMany(mappedBy = "id.order") 
+	private Set<OrderItem> items = new HashSet<>(); // Associação com OrderItem (1 para muitos)
+	
 	public Order() {
 	}
 	
@@ -47,12 +54,19 @@ public class Order implements Serializable {
 	public Order(Long id, Instant moment, OrderStatus status, User client) {
 		this.id = id;
 		this.moment = moment;
-		setStatus(status);
+		setStatus(status); // Usa o setter para garantir a conversão correta
 		this.client = client;
 	}
 
 	// ... (getters e setters de id, moment, client) ...
-	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public Instant getMoment() {
 		return moment;
 	}
@@ -61,20 +75,22 @@ public class Order implements Serializable {
 		this.moment = moment;
 	}
 
+	// Getter customizado para Status
 	public OrderStatus getStatus() {
 		// Lógica para converter o Integer de volta para o Enum
-		if (status == null) { 
+		if (status == null) {
 			return null;
 		}
 		return OrderStatus.valueOf(status);
 	}
-
+	
+	// Setter customizado para Status
 	public void setStatus(OrderStatus status) {
 		// Lógica para converter o Enum para Integer
 		if (status == null) {
 			this.status = null;
 		} else {
-			this.status = status.getCode();
+			this.status = status.getCode(); // Pega o código (ex: 1, 2) do Enum
 		}
 	}
 
@@ -85,8 +101,13 @@ public class Order implements Serializable {
 	public void setClient(User client) {
 		this.client = client;
 	}
-    
-    // ... (hashCode e equals) ...
+	
+	// Getter para os Itens do Pedido
+	public Set<OrderItem> getItems() {
+		return items;
+	}
+	
+	// ... (hashCode e equals) ...
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
