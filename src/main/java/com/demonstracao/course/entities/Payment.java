@@ -3,6 +3,8 @@ package com.demonstracao.course.entities;
 import java.time.Instant;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +27,7 @@ public class Payment implements java.io.Serializable {
 	private Instant moment;
 	
 	// 2. Associação com Order (1 para 1)
+	@JsonIgnore
 	@OneToOne
 	@JoinColumn(name = "order_id")
 	@MapsId

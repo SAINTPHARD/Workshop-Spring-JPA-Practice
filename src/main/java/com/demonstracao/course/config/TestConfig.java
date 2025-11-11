@@ -26,6 +26,8 @@ import com.demonstracao.course.repositories.UserRepository;
 @Profile({"test", "docker"}) 
 public class TestConfig implements CommandLineRunner {
 
+	// --- 1. INJEÇÃO DE DEPENDÊNCIAS ---
+	// Injeção de dependências dos repositórios necessários para popular o banco de dados
     @Autowired
     private UserRepository userRepository;
 
@@ -44,6 +46,7 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+    	// --- 2. CRIAÇÃO DE CATEGORIAS ---
     	Category departamentoTI = new Category(null, "Tecnologia da Informação");
     	Category departamentoRH = new Category(null, "Recursos Humanos");
     	Category departamentoFinanceiro = new Category(null, "Financeiro");

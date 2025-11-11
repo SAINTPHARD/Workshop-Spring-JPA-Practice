@@ -73,6 +73,11 @@ public class OrderItem {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
+	
+	// Método para calcular o subtotal do item do pedido
+	public Double getSubTotal() {
+		return price * quantity;
+	}
 
 	// hashCode and equals para comparar objetos
 	@Override

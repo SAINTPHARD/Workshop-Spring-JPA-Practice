@@ -35,7 +35,7 @@ public class Order implements Serializable {
 	private Instant moment;
 	
 	// 3º CAMPO (será a 3ª coluna)
-	// @Enumerated(EnumType.STRING) (REMOVIDO PARA SALVAR COMO INTEIRO)
+	// @Enumerated(EnumType.STRING) 
 	private Integer status;
 	// private OrderStatus status;
 	
@@ -126,6 +126,15 @@ public class Order implements Serializable {
 	// Getter para os Itens do Pedido
 	public Set<OrderItem> getItems() {
 		return items;
+	}
+	
+	// Método para calcular o total do pedido
+	public Double getTotal() {
+		double sum = 0.0;
+		for (OrderItem oi : items) {
+			sum += oi.getSubTotal();
+		}
+		return sum;
 	}
 	
 	// ... (hashCode e equals) ...
