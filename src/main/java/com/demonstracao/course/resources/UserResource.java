@@ -1,13 +1,17 @@
 package com.demonstracao.course.resources;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.demonstracao.course.entities.User;
 import com.demonstracao.course.services.UserService;
@@ -30,6 +34,23 @@ public class UserResource {
 		User u = service.findById(id);
 		return ResponseEntity.ok().body(u);
 	}
+	
+	// Implementação do método insert (inserir um novo usuário)
+	@PostMapping
+    public ResponseEntity<User> insert(@RequestBody User user) {
+        // 1. Salva o usuário no banco
+        user = service.insert(user);
+        
+        // 2. Cria a URI (URL) para o novo recurso criado
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(user.getId())
+                .toUri();
+
+        // 3. Retorna a resposta "201 Created" com a URI no cabeçalho
+        //    e o usuário salvo no corpo
+        return ResponseEntity.created(uri).body(user);
+    }
 }
 
 // @RestController // Anotação para definir que a classe é um recurso REST
@@ -67,3 +88,10 @@ public class UserResource {
 
 // List<User> list = service.findAll(); // Chamar o serviço para buscar todos os usuários
 // return ResponseEntity.ok().body(list); // Retornar a resposta HTTP com a lista de usuários no corpo
+
+//Implementação do método insert (inserir um novo usuário)
+//	public ResponseEntity<User> insert(@RequestBody User obj) { é o método que insere um novo usuário
+//		User newUser = service.insert(obj); // Chamar o serviço para inserir o novo usuário
+//@RequestBody avisa ao Spring para pegar o JSON
+// do corpo da requisição e transformar em um objeto User.
+//		return ResponseEntity.ok().body(newUser); // Retornar a resposta HTTP com o novo usuário no corpo
