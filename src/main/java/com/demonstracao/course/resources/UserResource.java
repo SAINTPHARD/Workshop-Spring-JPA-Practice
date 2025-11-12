@@ -61,13 +61,11 @@ public class UserResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	// Implementação EndPoint para update (atualizar um usuário por id)
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) {
 		user = service.update(id, user);
-		if (user == null) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.notFound().build();
+		return ResponseEntity.ok().body(user);
 	}
 }
 

@@ -38,23 +38,27 @@ public class UserService {
 			repository.deleteById(id);
 		}
 
-
+	// 5. Implementação do Update
 		public User update(Long id, User user) {
-			// Metodo para atualizar um usuário
-			User existingUser = repository.findById(id).orElse(null);
-			
-			if (existingUser != null) {
-				existingUser.setName(user.getName());
-				existingUser.setEmail(user.getEmail());
-				existingUser.setPhone(user.getPhone());
-				existingUser.setPassword(user.getPassword());
-				
-				return repository.save(existingUser);
-			}
-			
-			return null;
-		}
-}
+
+	        User existingUser = findById(id); 
+	        updateData(existingUser, user);
+	        return repository.save(existingUser);
+	    }
+
+	    /**
+	     * Método auxiliar privado para isolar a lógica de atualização.
+	     * Atualiza a entidade 'existingUser' (monitorada pelo JPA)
+	     * com os dados do objeto 'user' (vindo da requisição).
+	     */
+	    private void updateData(User existingUser, User user) {
+	        existingUser.setName(user.getName());
+	        existingUser.setEmail(user.getEmail());
+	        existingUser.setPhone(user.getPhone());
+	        //existingUser.setPassword(user.getPassword());
+	    }
+	}
+
 
 /**
 // @Service // registrar a camada de serviço como um componente do Spring
