@@ -32,6 +32,28 @@ public class UserService {
 		public User insert(User obj) {
 		return repository.save(obj);
 	}
+		
+	// 4. Implementação do Delete
+		public void delete(Long id) {
+			repository.deleteById(id);
+		}
+
+
+		public User update(Long id, User user) {
+			// Metodo para atualizar um usuário
+			User existingUser = repository.findById(id).orElse(null);
+			
+			if (existingUser != null) {
+				existingUser.setName(user.getName());
+				existingUser.setEmail(user.getEmail());
+				existingUser.setPhone(user.getPhone());
+				existingUser.setPassword(user.getPassword());
+				
+				return repository.save(existingUser);
+			}
+			
+			return null;
+		}
 }
 
 /**
