@@ -1,10 +1,12 @@
 package com.demonstracao.course.services.exceptions;
 
-public class ResourceNotFoundException extends Exception {
-	private static final long serialVersionUID = 1L;
-	
-		public ResourceNotFoundException(Object id) {
-		super("Resource not found. Id " + id);
-	}
+// Garanta que está herdando de "RuntimeException"
+public class ResourceNotFoundException extends RuntimeException {
+    
+    private static final long serialVersionUID = 1L;
 
+    // Construtor que recebe o ID que não foi encontrado
+    public ResourceNotFoundException(Object id) {
+        super("Recurso não encontrado. Id: " + id);
+    }
 }

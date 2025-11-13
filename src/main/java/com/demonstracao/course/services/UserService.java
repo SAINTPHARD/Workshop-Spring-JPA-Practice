@@ -4,14 +4,20 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.demonstracao.course.entities.User;
 import com.demonstracao.course.repositories.UserRepository;
+// Imports necessários para as exceções customizadas
+import com.demonstracao.course.services.exceptions.DatabaseException;
+import com.demonstracao.course.services.exceptions.ResourceNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException; // Import para o 'update'
 
 @Service 
 public class UserService {
-// implementar 2 operações básicas: findAll e findById
 	
 	@Autowired
 	private UserRepository repository;
@@ -22,43 +28,56 @@ public class UserService {
 	}
 	
 	
-	// 2. o método findById retorna um objeto Optional
-		public User findById(Long id) {
-			Optional<User> obj = repository.findById(id);
-			return obj.get();
-		}
+	// 2. o método findById
+	public User findById(Long id) {
+		Optional<User> obj = repository.findById(id);
+		// Se o objeto estiver presente, retorna-o; caso contrário, lança a exceção personalizada
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+	}
 	
 	// 3. Implementação da Inserção de User
-		public User insert(User obj) {
+	public User insert(User obj) {
 		return repository.save(obj);
 	}
 		
 	// 4. Implementação do Delete
-		public void delete(Long id) {
+	public void delete(Long id) {
+		try {
 			repository.deleteById(id);
+		} 
+        catch (EmptyResultDataAccessException e) {
+            // Captura o erro se o ID não for encontrado
+			throw new ResourceNotFoundException(id);
+		} 
+        catch (DataIntegrityViolationException e) {
+            // Captura o erro se o usuário tiver pedidos associados (integridade)
+			throw new DatabaseException(e.getMessage());
 		}
-
-	// 5. Implementação do Update
-		public User update(Long id, User user) {
-
-	        User existingUser = findById(id); 
-	        updateData(existingUser, user);
-	        return repository.save(existingUser);
-	    }
-
-	    /**
-	     * Método auxiliar privado para isolar a lógica de atualização.
-	     * Atualiza a entidade 'existingUser' (monitorada pelo JPA)
-	     * com os dados do objeto 'user' (vindo da requisição).
-	     */
-	    private void updateData(User existingUser, User user) {
-	        existingUser.setName(user.getName());
-	        existingUser.setEmail(user.getEmail());
-	        existingUser.setPhone(user.getPhone());
-	        //existingUser.setPassword(user.getPassword());
-	    }
 	}
 
+	// 5. Implementação do Update
+	public User update(Long id, User user) {
+		try {
+	        User existingUser = repository.getReferenceById(id); 
+	        updateData(existingUser, user);  
+	        return repository.save(existingUser);
+		} 
+        catch (EntityNotFoundException e) {
+            // Captura o erro se o ID não for encontrado ao tentar salvar
+            throw new ResourceNotFoundException(id);
+        }
+	}
+
+	/**
+	 * Método auxiliar privado para isolar a lógica de atualização.
+	 */
+	private void updateData(User existingUser, User user) {
+		existingUser.setName(user.getName());
+		existingUser.setEmail(user.getEmail());
+		existingUser.setPhone(user.getPhone());
+		// existingUser.setPassword(user.getPassword()); // (Mantive comentado como no seu original)
+	}
+}
 
 /**
 // @Service // registrar a camada de serviço como um componente do Spring

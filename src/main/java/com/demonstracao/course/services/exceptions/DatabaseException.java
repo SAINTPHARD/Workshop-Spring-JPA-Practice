@@ -1,6 +1,6 @@
 package com.demonstracao.course.services.exceptions;
 
-public class DatabaseException extends Exception {
+public class DatabaseException extends RuntimeException {
 	
 	private static final long serialVersionUID = 1L;
 
