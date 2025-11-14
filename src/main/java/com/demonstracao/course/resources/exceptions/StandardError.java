@@ -2,6 +2,9 @@ package com.demonstracao.course.resources.exceptions;
 
 import java.io.Serializable;
 import java.time.Instant; // <--- 1. Importe o Instant
+import java.util.List;
+
+import org.springframework.validation.FieldError;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -17,6 +20,8 @@ public class StandardError implements Serializable {
 	private String error; // mensagem de erro
 	private String message; // mensagem detalhada
 	private String path; // caminho da requisição que causou o erro
+	private String method; // método HTTP da requisição que causou o erro
+	private List<FieldError> errors; // lista de erros de validação (se houver)
 	
 	// 2. Construtor vazio
 	public StandardError() {

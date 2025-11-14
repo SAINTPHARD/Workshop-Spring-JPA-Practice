@@ -40,7 +40,7 @@ public class UserService {
 		return repository.save(obj);
 	}
 		
-	// 4. Implementação do Delete
+	// 4. Implementação do Delete com tratamento de exceções
 	public void delete(Long id) {
 		try {
 			repository.deleteById(id);

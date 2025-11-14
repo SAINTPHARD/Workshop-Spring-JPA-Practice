@@ -25,43 +25,55 @@ public class UserResource {
 	@Autowired
 	private UserService service;
 
+	// Implementação dos endpoints RESTful para o recurso User
+	// ==================================================
+	// 1.GET - Buscar todos os usuários
+	// ==================================================
 	@GetMapping
 	public ResponseEntity<List<User>> findAll() {
 		List<User> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 
+	// ==================================================
+	// 2.GET - EndPoint para buscar um usuário por id
+	// ==================================================
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<User> findById(@PathVariable Long id) {
 		User u = service.findById(id);
 		return ResponseEntity.ok().body(u);
 	}
 	
-	// Implementação do método insert (inserir um novo usuário)
+	// ==================================================
+	// 3. POST - Insert (Inserir)
+	// ==================================================
 	@PostMapping
     public ResponseEntity<User> insert(@RequestBody User user) {
-        // 1. Salva o usuário no banco
+        // 3.1. Salva o usuário no banco
         user = service.insert(user);
         
-        // 2. Cria a URI (URL) para o novo recurso criado
+        // 3.2. Cria a URI (URL) para o novo recurso criado
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(user.getId())
                 .toUri();
 
-        // 3. Retorna a resposta "201 Created" com a URI no cabeçalho
+        // 2.3. Retorna a resposta "201 Created" com a URI no cabeçalho
         //    e o usuário salvo no corpo
         return ResponseEntity.created(uri).body(user);
     }
 	
-	// Implementação EndPoint para delete (deletar um usuário por id)
+	// ==================================================
+	// 4. DELETE - Deletar
+	// ==================================================
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
-	// Implementação EndPoint para update (atualizar um usuário por id)
+	// ==================================================
+	// 5. PUT - Update (Atualizar)
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) {
 		user = service.update(id, user);
