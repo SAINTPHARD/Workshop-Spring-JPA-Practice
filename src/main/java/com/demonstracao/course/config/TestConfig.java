@@ -23,7 +23,7 @@ import com.demonstracao.course.repositories.ProductRepository;
 import com.demonstracao.course.repositories.UserRepository;
 
 @Configuration
-@Profile({"test", "docker"}) // Só roda este config nos perfis 'test' ou 'docker'
+@Profile({"test", "dev", "docker"}) // Só roda este config nos perfis 'test' ou 'docker'
 public class TestConfig implements CommandLineRunner {
 
     // --- 1. INJEÇÃO DE DEPENDÊNCIAS ---
