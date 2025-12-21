@@ -1,0 +1,96 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-11-01T18:20:00.000Z",
+  "__export_source": "chatgpt",
+  "resources": [
+    {
+      "_id": "wrk_spring_jpa_course",
+      "_type": "workspace",
+      "name": "Workshop Spring JPA \u2013 Course Practice (PT)",
+      "description": "Cole\u00e7\u00e3o para testar a API (users, products, categories, orders)."
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_spring_jpa_course",
+      "name": "Base",
+      "data": {
+        "base_url_local": "http://localhost:8080",
+        "base_url_docker": "http://host.docker.internal:8080"
+      }
+    },
+    {
+      "_id": "fld_users",
+      "_type": "request_group",
+      "parentId": "wrk_spring_jpa_course",
+      "name": "Users"
+    },
+    {
+      "_id": "fld_products",
+      "_type": "request_group",
+      "parentId": "wrk_spring_jpa_course",
+      "name": "Products"
+    },
+    {
+      "_id": "fld_categories",
+      "_type": "request_group",
+      "parentId": "wrk_spring_jpa_course",
+      "name": "Categories"
+    },
+    {
+      "_id": "fld_orders",
+      "_type": "request_group",
+      "parentId": "wrk_spring_jpa_course",
+      "name": "Orders"
+    },
+    {
+      "_id": "req_users_get_all",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "GET - Listar usu\u00e1rios",
+      "method": "GET",
+      "url": "{{ base_url_local }}/users"
+    },
+    {
+      "_id": "req_users_get_one",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "GET - Usu\u00e1rio por ID",
+      "method": "GET",
+      "url": "{{ base_url_local }}/users/1"
+    },
+    {
+      "_id": "req_products_get_all",
+      "_type": "request",
+      "parentId": "fld_products",
+      "name": "GET - Listar produtos",
+      "method": "GET",
+      "url": "{{ base_url_local }}/products"
+    },
+    {
+      "_id": "req_products_get_one",
+      "_type": "request",
+      "parentId": "fld_products",
+      "name": "GET - Produto por ID",
+      "method": "GET",
+      "url": "{{ base_url_local }}/products/1"
+    },
+    {
+      "_id": "req_categories_get_all",
+      "_type": "request",
+      "parentId": "fld_categories",
+      "name": "GET - Listar categorias",
+      "method": "GET",
+      "url": "{{ base_url_local }}/categories"
+    },
+    {
+      "_id": "req_orders_get_all",
+      "_type": "request",
+      "parentId": "fld_orders",
+      "name": "GET - Listar pedidos",
+      "method": "GET",
+      "url": "{{ base_url_local }}/orders"
+    }
+  ]
+}

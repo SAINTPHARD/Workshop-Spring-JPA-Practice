@@ -1,0 +1,6 @@
+IMPORTAR NO INSOMNIA:
+1. Abra o Insomnia.
+2. File > Import > From File.
+3. Escolha o arquivo 'insomnia_course_practice_pt.json'.
+4. As pastas vão aparecer: Users, Products, Categories, Orders.
+5. Certifique-se que a API está rodando em http://localhost:8080.
